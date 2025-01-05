@@ -16,21 +16,38 @@ int main() {
         int choice = inputHandler.getUserInput();
 
         if (choice == 1) {
-            std::string filename;
+            std::string testFilename;
             std::cout << "Enter the code filename to flash (e.g., test1.py): ";
-            std::cin >> filename;
-            flashModule.setExecFilename(filename);
+            std::cin >> testFilename;
+            flashModule.setExecFilename(testFilename);
 
         } else if (choice == 2) {
-            std::string filename = flashModule.getExecFilename();
-            if (filename.empty()) {
+            std::string testFilename = flashModule.getExecFilename();
+            if (testFilename.empty()) {
                 std::cout << "No code file selected. Please select a file first.\n";
             } else {
-                testModule.runTest(filename);
-                // Optionally compare outputs and use reporting module here
-                bool result = testModule.compareFiles("test_output.txt", "out1.txt");
-                reportingModule.reportResult(result);
+                inputHandler.printExecuteTestMenu();
+                int testChoice = inputHandler.getUserInput();
 
+                if (testChoice == 1) {
+                    bool result = testModule.runTest(testFilename);
+                    reportingModule.reportResult(result);
+                } else if (testChoice == 2) {
+                    std::string desiredOutputFilename;
+                    std::string testOutputFilename;
+
+                    std::cout << "Enter the file that you want to compare the output to: ";
+                    std::cin >> desiredOutputFilename;
+
+                    std::cout << "Enter the file that will contain the test output: ";
+                    std::cin >> testOutputFilename;
+                    
+                    testModule.compareFiles(desiredOutputFilename, testOutputFilename, testFilename);
+                } else if (testChoice == 3) {
+                    continue;
+                } else {
+                    std::cout << "Invalid choice, please try again.\n";
+                }
             }
 
         } else if (choice == 3) {
