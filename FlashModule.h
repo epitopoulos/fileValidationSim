@@ -1,4 +1,5 @@
 #include <string>
+#include <filesystem>
 
 class FlashModule {
 private:
@@ -6,7 +7,12 @@ private:
 
 public:
     void setExecFilename(const std::string& filename) {
-        ExecutedFilename = filename;
+        if (std::filesystem::exists(filename)) {
+            ExecutedFilename = filename;
+            std::cout << "Code file " << filename << " flashed successfully.\n";
+        } else {
+            std::cerr << "Error: File does not exist." << std::endl;
+        }
     }
 
     std::string getExecFilename() {

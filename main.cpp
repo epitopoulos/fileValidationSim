@@ -20,7 +20,6 @@ int main() {
             std::cout << "Enter the code filename to flash (e.g., test1.py): ";
             std::cin >> filename;
             flashModule.setExecFilename(filename);
-            std::cout << "Code file " << filename << " flashed successfully.\n";
 
         } else if (choice == 2) {
             std::string filename = flashModule.getExecFilename();
@@ -30,7 +29,6 @@ int main() {
                 testModule.runTest(filename);
                 // Optionally compare outputs and use reporting module here
                 bool result = testModule.compareFiles("test_output.txt", "out1.txt");
-                std::cout << result;
                 reportingModule.reportResult(result);
 
             }
