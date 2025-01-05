@@ -27,8 +27,10 @@ int main() {
             if (filename.empty()) {
                 std::cout << "No code file selected. Please select a file first.\n";
             } else {
-                int result = testModule.runTest(filename);
+                testModule.runTest(filename);
                 // Optionally compare outputs and use reporting module here
+                bool result = testModule.compareFiles("test_output.txt", "out1.txt");
+                std::cout << result;
                 reportingModule.reportResult(result);
 
             }
