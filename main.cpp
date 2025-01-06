@@ -5,11 +5,27 @@
 #include "TestModule.h"
 #include "ReportingModule.h"
 
-int main() {
+int main(int argc, char *argv[]) {
     InputHandler inputHandler;
     FlashModule flashModule;
     TestModule testModule;
     ReportingModule reportingModule;
+    
+    std::string command = argv[1];
+    if (command == "setExecFilename") {
+        std::string filename = argv[2];
+        std::cout << "Setting filename to " << filename << std::endl;
+        flashModule.setExecFilename(filename);
+    }
+
+    if (command == "runTest") {
+        std::string filename = argv[2];
+        std::cout << "Running test on file: " << filename << std::endl;
+        bool result = testModule.runTest(filename);
+        reportingModule.reportResult(result);
+    }
+
+    /*
 
     while (true) {
         inputHandler.printMenu();
@@ -57,6 +73,6 @@ int main() {
             std::cout << "Invalid choice, please try again.\n";
         }
     }
-
+    */
     return 0;
 }
