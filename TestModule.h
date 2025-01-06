@@ -6,7 +6,7 @@
 class TestModule {
 public:
     //Simple test to check if the script runs successfully
-    int runTest(const std::string& filename) {
+    bool runTest(const std::string& filename) {
         std::string command = "python " + filename;
         int result = system(command.c_str());
         return result;
@@ -20,36 +20,70 @@ public:
         return str.substr(first, last - first + 1);
     }
 
-
-    bool compareFiles(const std::string& file1Path, const std::string& file2Path) {
-        std::ifstream file1(file1Path);
-        std::ifstream file2(file2Path);
-
-        // Check if either file failed to open
-        if (!file1.is_open() || !file2.is_open()) {
-            std::cerr << "Error: One or both files could not be opened." << std::endl;
-            return false;
-        }
-
-        std::string line1, line2;
-
-        // Compare the files line by line
-        while (std::getline(file1, line1) && std::getline(file2, line2)) {
-            // Trim whitespace and ignore line-ending differences
-            line1 = trim(line1);
-            line2 = trim(line2);
-
-            if (line1 != line2) {
-                return false;
-            }
-        }
-
-        // Check if either file has more lines than the other
-        if (file1.eof() != file2.eof()) {
-            return false;
-        }
-
-        return true;
+void compareFiles(const std::string& desiredOutputFilePath, const std::string& testOutputFilePath, const std::string& pythonScriptFilePath) {
+    // Run the Python script and redirect its output to testOutputFilePath
+    std::string command = "python3 " + pythonScriptFilePath + " > " + testOutputFilePath;
+    int result = system(command.c_str());
+    if (result != 0) {
+        std::cerr << "Error: Failed to execute the Python script." << std::endl;
+        return;
     }
 
+    std::ifstream desiredFile(desiredOutputFilePath);
+    std::ifstream testFile(testOutputFilePath);
+
+    // Check if either file failed to open
+    if (!desiredFile.is_open() || !testFile.is_open()) {
+        std::cerr << "Error: One or both files could not be opened." << std::endl;
+        return;
+    }
+
+    std::string desiredLine, testLine;
+    bool areSame = true;
+
+    // Skip the first line of the test output file
+    std::getline(testFile, testLine);
+
+    // Compare the files line by line
+    while (std::getline(desiredFile, desiredLine)) {
+        // Get the corresponding line from the test output file
+        if (!std::getline(testFile, testLine)) {
+            // If we can't read from the test file but desiredFile has more lines, they don't match
+            areSame = false;
+            std::cout << "Files do not match at line: " << desiredLine << std::endl;
+            break;
+        }
+
+        // Trim whitespace and ignore line-ending differences
+        desiredLine = trim(desiredLine);
+        testLine = trim(testLine);
+
+        if (desiredLine != testLine) {
+            areSame = false;
+            std::cout << "Files do not match at line: " << desiredLine << std::endl;
+            break;
+        }
+    }
+
+    // Skip the last line of the test output file
+    std::getline(testFile, testLine);
+
+    // Check if testFile has more lines
+    if (areSame) {
+        while (std::getline(testFile, testLine)) {
+            // If testFile has non-empty lines after desiredFile ends, they don't match
+            if (trim(testLine) != "") {
+                areSame = false;
+                std::cout << "Files do not match. Extra line in test file: " << testLine << std::endl;
+                break;
+            }
+        }
+    }
+
+    if (areSame) {
+        std::cout << "Files match!" << std::endl;
+    } else {
+        std::cout << "Files do not match." << std::endl;
+    }
+}
 };
