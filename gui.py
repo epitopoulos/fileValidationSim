@@ -12,6 +12,9 @@ class GuiHandler:
         self.code_file_input = tk.Entry(root, width=50)
         self.code_file_input.pack(pady=10)
 
+        self.execution_status_label = tk.Label(root, text="")
+        self.execution_status_label.pack(pady=5)
+
         self.successful_execution_button = tk.Button(root, text="Successful Execution", command=self.on_successful_execution_clicked)
         self.successful_execution_button.pack(pady=5)
 
@@ -19,10 +22,13 @@ class GuiHandler:
         self.choose_test_output_button.pack(pady=5)
 
     def on_successful_execution_clicked(self):
-        test_filename = self.code_file_input.get()
+        test_filename = self.code_file_input.get()        
+        self.execution_status_label.config(text="Executing test...")
+        self.root.update_idletasks()  # Update the GUI to show the message immediately
         print(f"Executing test with code file: {test_filename}")
         subprocess.run(["./validationSim", "setExecFilename", test_filename], check=True)
         subprocess.run(["./validationSim", "runTest", test_filename], check=True)
+        self.execution_status_label.config(text="Execution completed successfully.")
 
     def on_choose_test_output_clicked(self):
         self.open_test_output_menu()
