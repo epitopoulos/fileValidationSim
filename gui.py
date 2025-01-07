@@ -26,9 +26,22 @@ class GuiHandler:
         self.execution_status_label.config(text="Executing test...")
         self.root.update_idletasks()  # Update the GUI to show the message immediately
         print(f"Executing test with code file: {test_filename}")
-        subprocess.run(["./validationSim", "setExecFilename", test_filename], check=True)
-        subprocess.run(["./validationSim", "runTest", test_filename], check=True)
-        self.execution_status_label.config(text="Execution completed successfully.")
+    
+        try:
+            # Set the execution filename
+            subprocess.run(["./validationSim", "setExecFilename", test_filename], check=True)
+        
+            # Run the test
+            subprocess.run(["./validationSim", "runTest", test_filename], check=True)
+        
+            # Read the result from the file
+            with open("/tmp/reportResult.txt", "r") as result_file:
+                result = result_file.read()
+                self.execution_status_label.config(text=result)
+        except subprocess.CalledProcessError as e:
+            self.execution_status_label.config(text=f"Error: {e.stderr}")
+        except FileNotFoundError:
+            self.execution_status_label.config(text="Result file not found.")
 
     def on_choose_test_output_clicked(self):
         self.open_test_output_menu()

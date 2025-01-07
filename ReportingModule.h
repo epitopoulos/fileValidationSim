@@ -1,13 +1,19 @@
 #include <iostream>
+#include <fstream>
 
 class ReportingModule {
 public:
-    //if success is 0, the test passed successfully
     void reportResult(bool success) {
-        if (!success) {
-            std::cout << "Test passed successfully!\n";
+        std::ofstream resultFile("/tmp/reportResult.txt");
+        if (resultFile.is_open()) {
+            if (!success) {
+                resultFile << "Test passed successfully!\n";
+            } else {
+                resultFile << "Test failed.\n";
+            }
+            resultFile.close();
         } else {
-            std::cout << "Test failed.\n";
+            std::cerr << "Unable to open result file.\n";
         }
     }
 };
