@@ -25,6 +25,13 @@ int main(int argc, char *argv[]) {
         reportingModule.reportResult(result);
     }
 
+    if (command == "compareFiles") {
+        std::string desiredOutputFilePath = argv[2];
+        std::string testOutputFilePath = argv[3];
+        std::string pythonScriptFilePath = argv[4];
+        testModule.compareFiles(desiredOutputFilePath, testOutputFilePath, pythonScriptFilePath);
+    }
+
     /*
 
     while (true) {

@@ -22,7 +22,8 @@ public:
 
 void compareFiles(const std::string& desiredOutputFilePath, const std::string& testOutputFilePath, const std::string& pythonScriptFilePath) {
     // Run the Python script and redirect its output to testOutputFilePath
-    std::string command = "python3 " + pythonScriptFilePath + " > " + testOutputFilePath;
+    std::cout << "Running Python script and saving output to " << testOutputFilePath << std::endl;
+    std::string command = "python " + pythonScriptFilePath + " > " + testOutputFilePath;
     int result = system(command.c_str());
     if (result != 0) {
         std::cerr << "Error: Failed to execute the Python script." << std::endl;

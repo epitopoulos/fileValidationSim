@@ -64,10 +64,12 @@ class GuiHandler:
         execute_test_button.pack(pady=10)
 
     def execute_test(self, input1, input2):
+        test_filename = self.code_file_input.get()
+
         # Implement the logic to execute the test with the provided inputs
         print(f"Executing test with Input 1: {input1} and Input 2: {input2}")
         # Example subprocess call (modify as needed)
-        subprocess.run(["./main", "runTest", input1, input2])
+        subprocess.run(["./validationSim", "compareFiles", input1, input2, test_filename], check=True)
 
 if __name__ == "__main__":
     root = tk.Tk()
