@@ -22,7 +22,7 @@ public:
 
 void compareFiles(const std::string& desiredOutputFilePath, const std::string& testOutputFilePath, const std::string& pythonScriptFilePath) {
     // Run the Python script and redirect its output to testOutputFilePath
-    std::string command = "python3 " + pythonScriptFilePath + " > " + testOutputFilePath;
+    std::string command = "python " + pythonScriptFilePath + " > " + testOutputFilePath;
     int result = system(command.c_str());
     if (result != 0) {
         std::cerr << "Error: Failed to execute the Python script." << std::endl;
@@ -69,7 +69,6 @@ void compareFiles(const std::string& desiredOutputFilePath, const std::string& t
     std::getline(testFile, testLine);
 
     // Check if testFile has more lines
-    if (areSame) {
         while (std::getline(testFile, testLine)) {
             // If testFile has non-empty lines after desiredFile ends, they don't match
             if (trim(testLine) != "") {
@@ -78,12 +77,9 @@ void compareFiles(const std::string& desiredOutputFilePath, const std::string& t
                 break;
             }
         }
-    }
 
     if (areSame) {
         std::cout << "Files match!" << std::endl;
-    } else {
-        std::cout << "Files do not match." << std::endl;
     }
 }
 };

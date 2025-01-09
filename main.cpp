@@ -5,11 +5,33 @@
 #include "TestModule.h"
 #include "ReportingModule.h"
 
-int main() {
+int main(int argc, char *argv[]) {
     InputHandler inputHandler;
     FlashModule flashModule;
     TestModule testModule;
     ReportingModule reportingModule;
+    
+    std::string command = argv[1];
+    if (command == "flashCode") {
+        std::string filename = argv[2];
+        flashModule.setExecFilename(filename);
+    }
+
+    if (command == "runTest") {
+        std::string filename = flashModule.getExecFilename();
+        std::cout << "Running test on file: " << filename << std::endl;
+        bool result = testModule.runTest(filename);
+        reportingModule.reportResult(result);
+    }
+
+    if (command == "compareFiles") {
+        std::string desiredOutputFilePath = argv[2];
+        std::string testOutputFilePath = argv[3];
+        std::string pythonScriptFilePath = flashModule.getExecFilename();
+        testModule.compareFiles(desiredOutputFilePath, testOutputFilePath, pythonScriptFilePath);
+    }
+
+    /*
 
     while (true) {
         inputHandler.printMenu();
@@ -57,6 +79,6 @@ int main() {
             std::cout << "Invalid choice, please try again.\n";
         }
     }
-
+    */
     return 0;
 }
