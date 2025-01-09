@@ -12,14 +12,13 @@ int main(int argc, char *argv[]) {
     ReportingModule reportingModule;
     
     std::string command = argv[1];
-    if (command == "setExecFilename") {
+    if (command == "flashCode") {
         std::string filename = argv[2];
-        std::cout << "Setting filename to " << filename << std::endl;
         flashModule.setExecFilename(filename);
     }
 
     if (command == "runTest") {
-        std::string filename = argv[2];
+        std::string filename = flashModule.getExecFilename();
         std::cout << "Running test on file: " << filename << std::endl;
         bool result = testModule.runTest(filename);
         reportingModule.reportResult(result);
@@ -28,7 +27,7 @@ int main(int argc, char *argv[]) {
     if (command == "compareFiles") {
         std::string desiredOutputFilePath = argv[2];
         std::string testOutputFilePath = argv[3];
-        std::string pythonScriptFilePath = argv[4];
+        std::string pythonScriptFilePath = flashModule.getExecFilename();
         testModule.compareFiles(desiredOutputFilePath, testOutputFilePath, pythonScriptFilePath);
     }
 
