@@ -1,4 +1,4 @@
-# HERMES 3rd Project
+# HERMES Team Verification Software
 
 ## Description
 This program simulates a **verification software for an exoskeleton**, designed to ensure that control code for the exoskeleton executes correctly and produces the expected results. Here’s how it functions:
